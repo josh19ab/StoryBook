@@ -8,7 +8,8 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
+        callbackURL:
+          "https://story-book-jzdfc2bol-josh19abs-projects.vercel.app/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         // passport callback function
