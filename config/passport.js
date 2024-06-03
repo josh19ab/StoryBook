@@ -3,6 +3,12 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 require('dotenv').config(); // Ensure dotenv is loaded
 
+// Log environment variables to verify they are loaded correctly
+console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
+console.log('GOOGLE_CALLBACK_URL:', process.env.GOOGLE_CALLBACK_URL);
+
+
 module.exports = function (passport) {
   passport.use(
     new GoogleStrategy(
