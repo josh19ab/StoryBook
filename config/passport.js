@@ -1,6 +1,7 @@
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const mongoose = require("mongoose");
 const User = require("../models/User");
+require('dotenv').config(); 
 
 module.exports = function (passport) {
   passport.use(
@@ -8,7 +9,8 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "https://story-book-omega.vercel.app/auth/google/callback",
+        callbackURL: process.env.GOOGLE_CALLBACK_URL,
+        // callbackURL: "/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
         // passport callback function
