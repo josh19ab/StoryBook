@@ -1,7 +1,7 @@
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const mongoose = require("mongoose");
-const User = require("../models/User");
-require('dotenv').config(); 
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const mongoose = require('mongoose');
+const User = require('../models/User');
+require('dotenv').config(); // Ensure dotenv is loaded
 
 module.exports = function (passport) {
   passport.use(
@@ -9,20 +9,14 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: process.env.GOOGLE_CALLBACK_URL,
-        // callbackURL: "/auth/google/callback",
+        callbackURL: process.env.GOOGLE_CALLBACK_URL, // Use environment variable
       },
       async (accessToken, refreshToken, profile, done) => {
-        // passport callback function
         try {
-          // Check if user already exists in our database
           const existingUser = await User.findOne({ googleId: profile.id });
-
           if (existingUser) {
-            // If user already exists, pass the existing user to done function
-            done(null, existingUser);
+            return done(null, existingUser);
           } else {
-            // If user doesn't exist, create a new user
             const newUser = new User({
               googleId: profile.id,
               displayName: profile.displayName,
@@ -30,12 +24,12 @@ module.exports = function (passport) {
               lastName: profile.name.familyName,
               image: profile.photos[0].value,
             });
-
             await newUser.save();
             done(null, newUser);
           }
         } catch (err) {
           console.error(err);
+          done(err, null);
         }
       }
     )
@@ -50,7 +44,7 @@ module.exports = function (passport) {
       const user = await User.findById(id);
       done(null, user);
     } catch (err) {
-      done(err);
+      done(err, null);
     }
   });
 };
